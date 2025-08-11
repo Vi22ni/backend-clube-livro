@@ -1,0 +1,49 @@
+{
+  "name": "backend-clube-livro",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon src/app.ts",
+    "start": "ts-node src/app.ts",
+    "build": "tsc",
+    "test": "jest --detectOpenHandles --forceExit",
+    "test:watch": "jest --watchAll",
+    "lint": "eslint . --ext .ts,.js --fix",
+    "type-check": "tsc --noEmit"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/pg": "^8.15.5",
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.1",
+    "eslint": "^9.33.0",
+    "express": "^5.1.0",
+    "express-rate-limit": "^8.0.1",
+    "express-validator": "^7.2.1",
+    "jsonwebtoken": "^9.0.2",
+    "pg": "^8.16.3",
+    "pg-hstore": "^2.3.4",
+    "prettier": "^3.6.2",
+    "redis": "^5.8.0",
+    "sequelize": "^6.37.7"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^6.0.0",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^24.2.1",
+    "@types/uuid": "^10.0.0",
+    "cross-env": "^10.0.0",
+    "jest": "^30.0.5",
+    "nodemon": "^3.1.10",
+    "sequelize-cli": "^6.6.3",
+    "supertest": "^7.1.4",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.2"
+  }
+}
