@@ -80,7 +80,7 @@ People.init(
         sequelize,
         tableName: 'people',
         timestamps: true,
-        paranoid: true,
+        paranoid: false,
         underscored: true,
         createdAt: 'created_at',
         updatedAt: 'updated_at',
