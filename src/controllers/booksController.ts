@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import Books from '../models/Books';
+import Books from '../models/Book';
 import { validationResult } from 'express-validator';
 
 interface PaginationQuery {

@@ -2,6 +2,8 @@ import { Model, DataTypes, Optional } from 'sequelize';
 import { v4 as uuidv4 } from 'uuid';
 import sequelize from '../config/database';
 import People from './People';
+import BookTag from './BookTag';
+import Tag from './Tag';
 
 interface BookAttributes {
     id: string;
@@ -144,6 +146,13 @@ Book.init(
 Book.belongsTo(People, {
     foreignKey: 'created_by_id',
     as: 'createdBy',
+});
+
+Book.belongsToMany(Tag, {
+    through: BookTag,
+    foreignKey: 'book_id',
+    otherKey: 'tag_id',
+    as: 'tags',
 });
 
 export default Book;
