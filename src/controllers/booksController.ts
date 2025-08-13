@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import Books from '../models/Book';
-import { validationResult } from 'express-validator';
+import BookTag from '../models/BookTag';
+import Tag from '../models/Tag';
 
 interface PaginationQuery {
     page?: string;
@@ -10,13 +11,10 @@ interface PaginationQuery {
 
 class BooksController {
     async create(req: Request, res: Response) {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() });
-        }
 
         try {
-            const { title, author, synopsis, publication_year, created_by_id } = req.body;
+            const { title, author, synopsis, publication_year, created_by_id, tags } = req.body;
+
 
             const newBook = await Books.create({
                 title,
@@ -26,7 +24,18 @@ class BooksController {
                 created_by_id
             });
 
-            return res.status(201).json(newBook);
+            const newTags: BookTag[] = [];
+
+            tags.forEach(async (tag: any) => {
+                newTags.push(await BookTag.create({ tag_id: tag.id, book_id: newBook.id }));
+            });
+
+            const bookWithTags = {
+                ...newBook,
+                tags: newTags
+            }
+
+            return res.status(201).json(bookWithTags);
         } catch (error) {
             console.error('Erro ao criar livro:', error);
             return res.status(500).json({ error: 'Erro interno do servidor' });
@@ -46,7 +55,8 @@ class BooksController {
                 where: { deleted_at: null },
                 limit: size,
                 offset: (page - 1) * size,
-                order: [['created_at', 'DESC']]
+                order: [['created_at', 'DESC']],
+                include: [{ model: Tag, as: 'tags' }]
             });
 
             return res.status(200).json({
@@ -68,7 +78,8 @@ class BooksController {
         try {
             const { id } = req.params;
             const book = await Books.findOne({
-                where: { id, deleted_at: null }
+                where: { id, deleted_at: null },
+                include: [{ model: Tag, as: 'tags' }]
             });
 
             if (!book) {
@@ -83,10 +94,6 @@ class BooksController {
     }
 
     async update(req: Request, res: Response) {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() });
-        }
 
         try {
             const { id } = req.params;

@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import People from '../models/People';
-import { validationResult } from 'express-validator';
 import { hashPassword } from '../utils/password';
 
 interface PaginationQuery {
@@ -11,10 +10,6 @@ interface PaginationQuery {
 
 class PeopleController {
     async create(req: Request, res: Response) {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() });
-        }
 
         try {
             const { name, email, password, bio } = req.body;
@@ -93,10 +88,6 @@ class PeopleController {
     }
 
     async update(req: Request, res: Response) {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() });
-        }
 
         try {
             const { id } = req.params;
