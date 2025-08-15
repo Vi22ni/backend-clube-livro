@@ -4,6 +4,7 @@ import sequelize from '../config/database';
 import People from './People';
 import BookTag from './BookTag';
 import Tag from './Tag';
+import Review from './Review';
 
 interface BookAttributes {
     id: string;
@@ -153,6 +154,11 @@ Book.belongsToMany(Tag, {
     foreignKey: 'book_id',
     otherKey: 'tag_id',
     as: 'tags',
+});
+
+Book.hasMany(Review, {
+    foreignKey: 'book_id',
+    as: 'reviews'
 });
 
 export default Book;

@@ -1,6 +1,7 @@
 import { Model, DataTypes, Optional } from 'sequelize';
 import { v4 as uuidv4 } from 'uuid';
 import sequelize from '../config/database'; 
+import Review from './Review';
 
 interface PeopleAttributes {
     id: string;
@@ -106,5 +107,11 @@ People.init(
         ],
     }
 );
+
+
+People.hasMany(Review, {
+    foreignKey: 'person_id',
+    as: 'reviews'
+});
 
 export default People;
