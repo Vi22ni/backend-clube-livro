@@ -37,16 +37,17 @@ class TagsController {
     async listAll(req: Request<{}, {}, {}, PaginationQuery>, res: Response) {
 
         try {
-            const page = parseInt(req.query.page || '1');
-            const size = parseInt(req.query.size || '10');
+            const { page = '1', size = '10' } = req.query;
+            const pageNum = parseInt(page);
+            const sizeNum = parseInt(size);
 
-            if (isNaN(page) || isNaN(size) || page < 1 || size < 1) {
-                return res.status(400).json({ error: 'Parâmetros inválidos' });
+            if (isNaN(pageNum) || isNaN(sizeNum) || pageNum < 1 || sizeNum < 1) {
+                return res.status(400).json({ error: 'Parâmetros de paginação inválidos' });
             }
 
             const { count, rows: tags } = await Tag.findAndCountAll({
-                limit: size,
-                offset: (page - 1) * size,
+                limit: sizeNum,
+                offset: (pageNum - 1) * sizeNum,
                 order: [['created_at', 'DESC']],
             })
 
@@ -56,7 +57,7 @@ class TagsController {
                     currentPage: page,
                     pageSize: size,
                     totalItems: count,
-                    totalPages: Math.ceil(count / size)
+                    totalPages: Math.ceil(count / sizeNum)
                 }
             });
         } catch (error) {

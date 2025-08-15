@@ -44,17 +44,18 @@ class BooksController {
 
     async listAll(req: Request<{}, {}, {}, PaginationQuery>, res: Response) {
         try {
-            const page = parseInt(req.query.page || '1');
-            const size = parseInt(req.query.size || '10');
+            const { page = '1', size = '10' } = req.query;
+            const pageNum = parseInt(page);
+            const sizeNum = parseInt(size);
 
-            if (isNaN(page) || isNaN(size) || page < 1 || size < 1) {
-                return res.status(400).json({ error: 'Parâmetros inválidos' });
+            if (isNaN(pageNum) || isNaN(sizeNum) || pageNum < 1 || sizeNum < 1) {
+                return res.status(400).json({ error: 'Parâmetros de paginação inválidos' });
             }
 
             const { count, rows: books } = await Books.findAndCountAll({
                 where: { deleted_at: null },
-                limit: size,
-                offset: (page - 1) * size,
+                limit: sizeNum,
+                offset: (pageNum - 1) * sizeNum,
                 order: [['created_at', 'DESC']],
                 include: [{ model: Tag, as: 'tags' }]
             });
@@ -65,7 +66,7 @@ class BooksController {
                     currentPage: page,
                     pageSize: size,
                     totalItems: count,
-                    totalPages: Math.ceil(count / size),
+                    totalPages: Math.ceil(count / sizeNum),
                 },
             });
         } catch (error) {
@@ -132,6 +133,51 @@ class BooksController {
             return res.status(204).send();
         } catch (error) {
             console.error('Erro ao deletar livro:', error);
+            return res.status(500).json({ error: 'Erro interno do servidor' });
+        }
+    }
+
+    async getByTag(req: Request<{}, {}, {}, { tag: string } & PaginationQuery>, res: Response) {
+        try {
+            const { tag, page = '1', size = '10' } = req.query;
+            const pageNum = parseInt(page);
+            const sizeNum = parseInt(size);
+
+            if (isNaN(pageNum) || isNaN(sizeNum) || pageNum < 1 || sizeNum < 1) {
+                return res.status(400).json({ error: 'Parâmetros de paginação inválidos' });
+            }
+
+            if (!tag) {
+                return res.status(400).json({ error: 'Parâmetro "tag" é obrigatório' });
+            }
+
+
+            const { count, rows: books } = await Books.findAndCountAll({
+                include: [{
+                    model: Tag,
+                    as: 'tags',
+                    where: {
+                        name: tag
+                    },
+                    through: { attributes: [] }
+                }],
+                limit: sizeNum,
+                offset: (pageNum - 1) * sizeNum,
+                order: [['created_at', 'DESC']],
+                distinct: true
+            });
+
+            return res.json({
+                data: books,
+                pagination: {
+                    currentPage: pageNum,
+                    pageSize: sizeNum,
+                    totalItems: count,
+                    totalPages: Math.ceil(count / sizeNum)
+                }
+            });
+        } catch (error) {
+            console.error('Erro ao buscar livros por tag:', error);
             return res.status(500).json({ error: 'Erro interno do servidor' });
         }
     }
