@@ -1,10 +1,23 @@
 import { Request, Response } from 'express';
 import Tag from '../models/Tag';
+import { Op } from 'sequelize';
 
 interface PaginationQuery {
     page?: string;
     size?: string;
 }
+
+/*
+melhorias futuras:
+
+    Cache: Implemente cache na camada de serviço para termos populares
+
+    Stemming: Busque por radicais das palavras (ex: "fic" encontrar "ficção")
+
+    Busca por prefixo: Adicione opção para buscar só no início das palavras
+
+    Popularidade: Ordene também por frequência de uso das tags
+*/
 
 class TagsController {
     async create(req: Request, res: Response) {
@@ -69,6 +82,35 @@ class TagsController {
             return res.status(500).json({ error: 'Erro interno do servidor' });
         }
     }
+
+    async searchTags(req: Request<{}, {}, {}, { term: string }>, res: Response) {
+        try {
+            const { term } = req.query;
+
+            if (!term || term.trim().length < 2) {
+                return res.status(400).json({
+                    error: 'Termo de busca deve ter pelo menos 2 caracteres'
+                });
+            }
+
+            const tags = await Tag.findAll({
+                where: {
+                    name: {
+                        [Op.iLike]: `%${term}%`
+                    }
+                },
+                limit: 10,
+                order: [
+                    ['name', 'ASC']
+                ]
+            });
+
+            return res.json(tags);
+        } catch (error) {
+            console.error('Erro ao buscar tags:', error);
+            return res.status(500).json({ error: 'Erro interno do servidor' });
+        }
+    }
 }
 
-export default TagsController;
+export default new TagsController();

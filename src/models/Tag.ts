@@ -58,6 +58,13 @@ Tag.init(
                 }
             },
         },
+        indexes: [
+            {
+                name: 'idx_tag_name_search',
+                fields: ['name'],
+                using: 'BTREE'
+            }
+        ]
     }
 );
 
