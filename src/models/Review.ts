@@ -114,15 +114,4 @@ Review.init(
     }
 );
 
-Review.belongsTo(Book, {
-    foreignKey: 'book_id',
-    as: 'book'
-});
-
-Review.belongsTo(People, {
-    foreignKey: 'person_id',
-    as: 'person'
-});
-
-
 export default Review;

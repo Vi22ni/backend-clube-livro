@@ -63,14 +63,4 @@ ClubMember.init(
     }
 );
 
-ClubMember.belongsTo(Club, {
-    foreignKey: 'club_id',
-    as: 'club'
-});
-
-ClubMember.belongsTo(People, {
-    foreignKey: 'person_id',
-    as: 'person'
-});
-
 export default ClubMember;

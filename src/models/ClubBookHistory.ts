@@ -89,14 +89,4 @@ ClubBookHistory.init(
     }
 );
 
-ClubBookHistory.belongsTo(Club, {
-    foreignKey: 'club_id',
-    as: 'club'
-});
-
-ClubBookHistory.belongsTo(Book, {
-    foreignKey: 'book_id',
-    as: 'book'
-});
-
 export default ClubBookHistory;

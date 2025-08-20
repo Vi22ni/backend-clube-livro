@@ -3,7 +3,7 @@ import Books from '../models/Book';
 import BookTag from '../models/BookTag';
 import Tag from '../models/Tag';
 import Review from '../models/Review';
-import sequelize from 'sequelize/types/sequelize';
+import sequelize from '../config/database';
 
 interface PaginationQuery {
     page?: string;
@@ -76,11 +76,11 @@ class BooksController {
                 attributes: {
                     include: [
                         [
-                            sequelize.literal('(SELECT COALESCE(AVG(rating), 0) FROM reviews WHERE reviews.book_id = books.id)'),
+                            sequelize.literal('(SELECT COALESCE(AVG(rating), 0) FROM reviews WHERE reviews.book_id = "Book"."id")'),
                             'average_rating'
                         ],
                         [
-                            sequelize.literal('(SELECT COUNT(*) FROM reviews WHERE reviews.book_id = books.id)'),
+                            sequelize.literal('(SELECT COUNT(*) FROM reviews WHERE reviews.book_id = "Book"."id")'),
                             'review_count'
                         ]
                     ]
@@ -124,11 +124,11 @@ class BooksController {
                 attributes: {
                     include: [
                         [
-                            sequelize.literal('(SELECT COALESCE(AVG(rating), 0) FROM reviews WHERE reviews.book_id = books.id)'),
+                            sequelize.literal('(SELECT COALESCE(AVG(rating), 0) FROM reviews WHERE reviews.book_id = "Book"."id")'),
                             'average_rating'
                         ],
                         [
-                            sequelize.literal('(SELECT COUNT(*) FROM reviews WHERE reviews.book_id = books.id)'),
+                            sequelize.literal('(SELECT COUNT(*) FROM reviews WHERE reviews.book_id = "Book"."id")'),
                             'review_count'
                         ]
                     ]

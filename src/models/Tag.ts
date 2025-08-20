@@ -68,11 +68,5 @@ Tag.init(
     }
 );
 
-Tag.belongsToMany(Book, {
-    through: BookTag,
-    foreignKey: 'tag_id',
-    otherKey: 'book_id',
-    as: 'books',
-});
 
 export default Tag;

@@ -144,21 +144,4 @@ Book.init(
     }
 );
 
-Book.belongsTo(People, {
-    foreignKey: 'created_by_id',
-    as: 'createdBy',
-});
-
-Book.belongsToMany(Tag, {
-    through: BookTag,
-    foreignKey: 'book_id',
-    otherKey: 'tag_id',
-    as: 'tags',
-});
-
-Book.hasMany(Review, {
-    foreignKey: 'book_id',
-    as: 'reviews'
-});
-
 export default Book;

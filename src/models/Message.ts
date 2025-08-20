@@ -91,14 +91,4 @@ Message.init(
     }
 );
 
-Message.belongsTo(Chat, {
-    foreignKey: 'chat_id',
-    as: 'chat'
-});
-
-Message.belongsTo(People, {
-    foreignKey: 'person_id',
-    as: 'person'
-});
-
 export default Message;

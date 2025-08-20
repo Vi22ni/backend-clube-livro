@@ -206,6 +206,26 @@ class ReviewsController {
             return res.status(500).json({ error: 'Erro interno do servidor' });
         }
     }
+
+    
+    async delete(req: Request, res: Response) {
+        try {
+            const { id } = req.params;
+
+            const review = await Review.findOne({ where: { id } });
+            if (!review) {
+                return res.status(404).json({ error: 'avaliação não encontrada' });
+            }
+
+            await review.destroy();
+
+            return res.status(204).send();
+        } catch (error) {
+            console.error('Erro ao deletar avaliação:', error);
+            return res.status(500).json({ error: 'Erro interno do servidor' });
+        }
+    }
+
 }
 
 export default new ReviewsController();

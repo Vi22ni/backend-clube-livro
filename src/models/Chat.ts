@@ -62,15 +62,4 @@ Chat.init(
     }
 );
 
-Chat.belongsTo(Club, {
-    foreignKey: 'club_id',
-    as: 'club'
-});
-
-Chat.hasMany(Message, {
-    foreignKey: 'chat_id',
-    as: 'messages'
-});
-
-
 export default Chat;

@@ -121,31 +121,4 @@ Club.init(
     }
 );
 
-Club.belongsTo(People, {
-    foreignKey: 'creator_id',
-    as: 'creator'
-});
-
-Club.belongsTo(Book, {
-    foreignKey: 'current_book_id',
-    as: 'currentBook'
-});
-
-Club.belongsToMany(People, {
-    through: ClubMember,
-    foreignKey: 'club_id',
-    otherKey: 'person_id',
-    as: 'members'
-});
-
-Club.hasMany(ClubBookHistory, {
-    foreignKey: 'club_id',
-    as: 'history'
-});
-
-Club.hasMany(Chat, {
-    foreignKey: 'club_id',
-    as: 'chats'
-});
-
 export default Club;

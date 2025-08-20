@@ -108,10 +108,4 @@ People.init(
     }
 );
 
-
-People.hasMany(Review, {
-    foreignKey: 'person_id',
-    as: 'reviews'
-});
-
 export default People;

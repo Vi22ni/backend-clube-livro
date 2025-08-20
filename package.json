@@ -17,6 +17,7 @@
   "license": "ISC",
   "dependencies": {
     "@types/pg": "^8.15.5",
+    "@types/sequelize": "^4.28.20",
     "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.1",

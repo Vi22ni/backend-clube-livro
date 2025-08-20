@@ -3,6 +3,7 @@ import peopleRouter from './peopleRoutes'
 import booksRouter from './booksRoutes'
 import authRouter from './authRoutes'
 import tagsRouter from './tagsRoutes'
+import '../models';
 
 const router = express.Router();
 router.use('/people', peopleRouter);
