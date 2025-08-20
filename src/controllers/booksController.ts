@@ -2,6 +2,8 @@ import { Request, Response } from 'express';
 import Books from '../models/Book';
 import BookTag from '../models/BookTag';
 import Tag from '../models/Tag';
+import Review from '../models/Review';
+import sequelize from 'sequelize/types/sequelize';
 
 interface PaginationQuery {
     page?: string;
@@ -57,7 +59,32 @@ class BooksController {
                 limit: sizeNum,
                 offset: (pageNum - 1) * sizeNum,
                 order: [['created_at', 'DESC']],
-                include: [{ model: Tag, as: 'tags' }]
+                include: [
+                    {
+                        model: Tag,
+                        as: 'tags',
+                        attributes: ['id', 'name'],
+                        through: { attributes: [] }
+                    },
+                    {
+                        model: Review,
+                        as: 'reviews',
+                        attributes: [], // Não retorna os reviews, só usa para agregação
+                        required: false
+                    }
+                ],
+                attributes: {
+                    include: [
+                        [
+                            sequelize.literal('(SELECT COALESCE(AVG(rating), 0) FROM reviews WHERE reviews.book_id = books.id)'),
+                            'average_rating'
+                        ],
+                        [
+                            sequelize.literal('(SELECT COUNT(*) FROM reviews WHERE reviews.book_id = books.id)'),
+                            'review_count'
+                        ]
+                    ]
+                }
             });
 
             return res.status(200).json({
@@ -80,7 +107,32 @@ class BooksController {
             const { id } = req.params;
             const book = await Books.findOne({
                 where: { id, deleted_at: null },
-                include: [{ model: Tag, as: 'tags' }]
+                include: [
+                    {
+                        model: Tag,
+                        as: 'tags',
+                        attributes: ['id', 'name'],
+                        through: { attributes: [] }
+                    },
+                    {
+                        model: Review,
+                        as: 'reviews',
+                        attributes: [], // Não retorna os reviews, só usa para agregação
+                        required: false
+                    }
+                ],
+                attributes: {
+                    include: [
+                        [
+                            sequelize.literal('(SELECT COALESCE(AVG(rating), 0) FROM reviews WHERE reviews.book_id = books.id)'),
+                            'average_rating'
+                        ],
+                        [
+                            sequelize.literal('(SELECT COUNT(*) FROM reviews WHERE reviews.book_id = books.id)'),
+                            'review_count'
+                        ]
+                    ]
+                }
             });
 
             if (!book) {
